@@ -692,6 +692,74 @@ function renderAttendanceTable() {
     }
 }
 
+function openAttendanceModal(attendanceId = null) {
+    editingId = attendanceId;
+    populateEmployeeSelect('attendanceEmployee');
+    const modalTitle = document.getElementById('attendanceModalTitle');
+    const attendanceDate = document.getElementById('attendanceDate');
+    const attendanceEmployee = document.getElementById('attendanceEmployee');
+    const attendanceCheckIn = document.getElementById('attendanceCheckIn');
+    const attendanceCheckOut = document.getElementById('attendanceCheckOut');
+    const attendanceNotes = document.getElementById('attendanceNotes');
+
+    if (attendanceId) {
+        if (modalTitle) modalTitle.textContent = 'تعديل سجل الحضور';
+        const attendance = AppData.attendance.find(att => att.id === attendanceId);
+        if (attendance) {
+            if (attendanceDate) attendanceDate.value = attendance.date;
+            if (attendanceEmployee) attendanceEmployee.value = attendance.employeeId;
+            if (attendanceCheckIn) attendanceCheckIn.value = attendance.checkIn;
+            if (attendanceCheckOut) attendanceCheckOut.value = attendance.checkOut;
+            if (attendanceNotes) attendanceNotes.value = attendance.notes;
+        }
+    } else {
+        if (modalTitle) modalTitle.textContent = 'تسجيل حضور جديد';
+        if (attendanceDate) attendanceDate.value = new Date().toISOString().split('T')[0];
+        if (attendanceCheckIn) attendanceCheckIn.value = '';
+        if (attendanceCheckOut) attendanceCheckOut.value = '';
+        if (attendanceNotes) attendanceNotes.value = '';
+    }
+
+    openModal('attendanceModal');
+}
+
+function saveAttendance(formData) {
+    const attendanceData = {
+        employeeId: parseInt(formData.get('employeeId')),
+        date: formData.get('date'),
+        checkIn: formData.get('checkIn'),
+        checkOut: formData.get('checkOut'),
+        notes: formData.get('notes') || ''
+    };
+
+    if (editingId) {
+        const index = AppData.attendance.findIndex(att => att.id === editingId);
+        if (index !== -1) {
+            AppData.attendance[index] = { ...AppData.attendance[index], ...attendanceData };
+            showNotification('تم تحديث سجل الحضور بنجاح', 'success');
+        }
+    } else {
+        const newAttendance = { id: generateId('attendance'), ...attendanceData };
+        AppData.attendance.push(newAttendance);
+        showNotification('تم تسجيل الحضور بنجاح', 'success');
+    }
+
+    closeModal('attendanceModal');
+    renderAttendanceTable();
+}
+
+function editAttendance(attendanceId) {
+    openAttendanceModal(attendanceId);
+}
+
+function deleteAttendance(attendanceId) {
+    if (confirm('هل أنت متأكد من حذف سجل الحضور؟')) {
+        AppData.attendance = AppData.attendance.filter(att => att.id !== attendanceId);
+        showNotification('تم حذف سجل الحضور بنجاح', 'success');
+        renderAttendanceTable();
+    }
+}
+
 // =================================================================
 // إدارة المرتبات
 // =================================================================
@@ -739,6 +807,76 @@ function renderPayrollTable() {
     }
 }
 
+function openPayrollModal(payrollId = null) {
+    editingId = payrollId;
+    populateEmployeeSelect('payrollEmployee');
+    const modalTitle = document.getElementById('payrollModalTitle');
+    const payrollDate = document.getElementById('payrollDate');
+    const payrollEmployee = document.getElementById('payrollEmployee');
+    const payrollBasicSalary = document.getElementById('payrollBasicSalary');
+    const payrollDisbursed = document.getElementById('payrollDisbursed');
+    const payrollNotes = document.getElementById('payrollNotes');
+
+    if (payrollId) {
+        if (modalTitle) modalTitle.textContent = 'تعديل دفع الراتب';
+        const payroll = AppData.payroll.find(pay => pay.id === payrollId);
+        if (payroll) {
+            if (payrollDate) payrollDate.value = payroll.date;
+            if (payrollEmployee) payrollEmployee.value = payroll.employeeId;
+            if (payrollBasicSalary) payrollBasicSalary.value = payroll.basicSalary;
+            if (payrollDisbursed) payrollDisbursed.value = payroll.disbursed;
+            if (payrollNotes) payrollNotes.value = payroll.notes;
+        }
+    } else {
+        if (modalTitle) modalTitle.textContent = 'إضافة دفع راتب جديد';
+        if (payrollDate) payrollDate.value = new Date().toISOString().split('T')[0];
+        if (payrollEmployee) payrollEmployee.value = '';
+        if (payrollBasicSalary) payrollBasicSalary.value = '';
+        if (payrollDisbursed) payrollDisbursed.value = '';
+        if (payrollNotes) payrollNotes.value = '';
+    }
+
+    openModal('payrollModal');
+}
+
+function savePayroll(formData) {
+    const payrollData = {
+        employeeId: parseInt(formData.get('employeeId')),
+        date: formData.get('date'),
+        basicSalary: parseFloat(formData.get('basicSalary')),
+        disbursed: parseFloat(formData.get('disbursed')) || 0,
+        notes: formData.get('notes') || ''
+    };
+
+    if (editingId) {
+        const index = AppData.payroll.findIndex(pay => pay.id === editingId);
+        if (index !== -1) {
+            AppData.payroll[index] = { ...AppData.payroll[index], ...payrollData };
+            showNotification('تم تحديث دفع الراتب بنجاح', 'success');
+        }
+    } else {
+        const newPayroll = { id: generateId('payroll'), ...payrollData };
+        AppData.payroll.push(newPayroll);
+        showNotification('تم إضافة دفع الراتب بنجاح', 'success');
+    }
+
+    closeModal('payrollModal');
+    renderPayrollTable();
+    updateDashboard();
+}
+
+function editPayroll(payrollId) {
+    openPayrollModal(payrollId);
+}
+
+function deletePayroll(payrollId) {
+    if (confirm('هل أنت متأكد من حذف سجل الراتب؟')) {
+        AppData.payroll = AppData.payroll.filter(pay => pay.id !== payrollId);
+        showNotification('تم حذف سجل الراتب بنجاح', 'success');
+        renderPayrollTable();
+    }
+}
+
 // =================================================================
 // إدارة الموردين
 // =================================================================
@@ -775,6 +913,58 @@ function renderSuppliersTable() {
     }
 
     renderPaymentsTable();
+}
+
+function openSupplierModal(supplierId = null) {
+    editingId = supplierId;
+    const modalTitle = document.getElementById('supplierModalTitle');
+    const supplierName = document.getElementById('supplierName');
+    const supplierContact = document.getElementById('supplierContact');
+    const supplierAddress = document.getElementById('supplierAddress');
+
+    if (supplierId) {
+        if (modalTitle) modalTitle.textContent = 'تعديل بيانات المورد';
+        const supplier = AppData.suppliers.find(sup => sup.id === supplierId);
+        if (supplier) {
+            if (supplierName) supplierName.value = supplier.name;
+            if (supplierContact) supplierContact.value = supplier.contact;
+            if (supplierAddress) supplierAddress.value = supplier.address;
+        }
+    } else {
+        if (modalTitle) modalTitle.textContent = 'إضافة مورد جديد';
+        if (supplierName) supplierName.value = '';
+        if (supplierContact) supplierContact.value = '';
+        if (supplierAddress) supplierAddress.value = '';
+    }
+
+    openModal('supplierModal');
+}
+
+function saveSupplier(formData) {
+    const supplierData = {
+        name: formData.get('name'),
+        contact: formData.get('contact'),
+        address: formData.get('address')
+    };
+
+    if (editingId) {
+        const index = AppData.suppliers.findIndex(sup => sup.id === editingId);
+        if (index !== -1) {
+            AppData.suppliers[index] = { ...AppData.suppliers[index], ...supplierData };
+            showNotification('تم تحديث بيانات المورد بنجاح', 'success');
+        }
+    } else {
+        const newSupplier = { id: generateId('supplier'), ...supplierData };
+        AppData.suppliers.push(newSupplier);
+        showNotification('تم إضافة المورد بنجاح', 'success');
+    }
+
+    closeModal('supplierModal');
+    renderSuppliersTable();
+}
+
+function editSupplier(supplierId) {
+    openSupplierModal(supplierId);
 }
 
 function renderPaymentsTable() {
@@ -817,6 +1007,81 @@ function renderPaymentsTable() {
             </td></tr>
         `;
     }
+}
+
+function openPaymentModal(paymentId = null) {
+    editingId = paymentId;
+    populateSupplierSelect('paymentSupplier');
+    const modalTitle = document.getElementById('paymentModalTitle');
+    const paymentDate = document.getElementById('paymentDate');
+    const paymentSupplier = document.getElementById('paymentSupplier');
+    const paymentPayment = document.getElementById('paymentPayment');
+    const paymentInvoiceTotal = document.getElementById('paymentInvoiceTotal');
+    const paymentReturnedItems = document.getElementById('paymentReturnedItems');
+    const paymentNotes = document.getElementById('paymentNotes');
+
+    if (paymentId) {
+        if (modalTitle) modalTitle.textContent = 'تعديل الدفعة';
+        const payment = AppData.payments.find(pay => pay.id === paymentId);
+        if (payment) {
+            if (paymentDate) paymentDate.value = payment.date;
+            if (paymentSupplier) paymentSupplier.value = payment.supplierId;
+            if (paymentPayment) paymentPayment.value = payment.payment;
+            if (paymentInvoiceTotal) paymentInvoiceTotal.value = payment.invoiceTotal;
+            if (paymentReturnedItems) paymentReturnedItems.value = payment.returnedItems;
+            if (paymentNotes) paymentNotes.value = payment.notes;
+        }
+    } else {
+        if (modalTitle) modalTitle.textContent = 'إضافة دفعة جديدة';
+        if (paymentDate) paymentDate.value = new Date().toISOString().split('T')[0];
+        if (paymentPayment) paymentPayment.value = '';
+        if (paymentInvoiceTotal) paymentInvoiceTotal.value = '';
+        if (paymentReturnedItems) paymentReturnedItems.value = '';
+        if (paymentNotes) paymentNotes.value = '';
+    }
+
+    openModal('paymentModal');
+}
+
+function populateSupplierSelect(selectId) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    const options = ['<option value="">اختر المورد</option>'];
+    AppData.suppliers.forEach(sup => {
+        options.push(`<option value="${sup.id}">${sup.name}</option>`);
+    });
+    select.innerHTML = options.join('');
+}
+
+function savePayment(formData) {
+    const paymentData = {
+        supplierId: parseInt(formData.get('supplierId')),
+        date: formData.get('date'),
+        payment: parseFloat(formData.get('payment')),
+        invoiceTotal: parseFloat(formData.get('invoiceTotal')),
+        returnedItems: formData.get('returnedItems') || '',
+        notes: formData.get('notes') || ''
+    };
+
+    if (editingId) {
+        const index = AppData.payments.findIndex(pay => pay.id === editingId);
+        if (index !== -1) {
+            AppData.payments[index] = { ...AppData.payments[index], ...paymentData };
+            showNotification('تم تحديث الدفعة بنجاح', 'success');
+        }
+    } else {
+        const newPayment = { id: generateId('payment'), ...paymentData };
+        AppData.payments.push(newPayment);
+        showNotification('تم إضافة الدفعة بنجاح', 'success');
+    }
+
+    closeModal('paymentModal');
+    renderPaymentsTable();
+}
+
+function editPayment(paymentId) {
+    openPaymentModal(paymentId);
 }
 
 function showSuppliersView() {
@@ -895,6 +1160,76 @@ function renderExpensesTable() {
     }
 }
 
+function openExpenseModal(expenseId = null) {
+    editingId = expenseId;
+    const modalTitle = document.getElementById('expenseModalTitle');
+    const expenseDate = document.getElementById('expenseDate');
+    const expenseType = document.getElementById('expenseType');
+    const expenseName = document.getElementById('expenseName');
+    const expenseAmount = document.getElementById('expenseAmount');
+    const expenseNotes = document.getElementById('expenseNotes');
+
+    if (expenseId) {
+        if (modalTitle) modalTitle.textContent = 'تعديل المصروف';
+        const expense = AppData.expenses.find(exp => exp.id === expenseId);
+        if (expense) {
+            if (expenseDate) expenseDate.value = expense.date;
+            if (expenseType) expenseType.value = expense.type;
+            if (expenseName) expenseName.value = expense.name;
+            if (expenseAmount) expenseAmount.value = expense.amount;
+            if (expenseNotes) expenseNotes.value = expense.notes;
+        }
+    } else {
+        if (modalTitle) modalTitle.textContent = 'إضافة مصروف جديد';
+        if (expenseDate) expenseDate.value = new Date().toISOString().split('T')[0];
+        if (expenseType) expenseType.value = '';
+        if (expenseName) expenseName.value = '';
+        if (expenseAmount) expenseAmount.value = '';
+        if (expenseNotes) expenseNotes.value = '';
+    }
+
+    openModal('expenseModal');
+}
+
+function saveExpense(formData) {
+    const expenseData = {
+        date: formData.get('date'),
+        type: formData.get('type'),
+        name: formData.get('name'),
+        amount: parseFloat(formData.get('amount')),
+        notes: formData.get('notes') || ''
+    };
+
+    if (editingId) {
+        const index = AppData.expenses.findIndex(exp => exp.id === editingId);
+        if (index !== -1) {
+            AppData.expenses[index] = { ...AppData.expenses[index], ...expenseData };
+            showNotification('تم تحديث المصروف بنجاح', 'success');
+        }
+    } else {
+        const newExpense = { id: generateId('expense'), ...expenseData };
+        AppData.expenses.push(newExpense);
+        showNotification('تم إضافة المصروف بنجاح', 'success');
+    }
+
+    closeModal('expenseModal');
+    renderExpensesTable();
+    updateDashboard();
+}
+
+function editExpense(expenseId) {
+    openExpenseModal(expenseId);
+}
+
+function deleteExpense(expenseId) {
+    if (confirm('هل أنت متأكد من حذف هذا المصروف؟')) {
+        AppData.expenses = AppData.expenses.filter(exp => exp.id !== expenseId);
+        showNotification('تم حذف المصروف بنجاح', 'success');
+        renderExpensesTable();
+        updateDashboard();
+    }
+}
+
 // =================================================================
 // إدارة مراجعة اليوميات
 // =================================================================
@@ -940,67 +1275,110 @@ function renderDailyReviewTable() {
     }
 }
 
-// =================================================================
-// وظائف الحذف والتعديل
-// =================================================================
+function openDailyReviewModal(reviewId = null) {
+    editingId = reviewId;
+    const modalTitle = document.getElementById('dailyReviewModalTitle');
+    const dailyReviewDate = document.getElementById('dailyReviewDate');
+    const dailyReviewBranch = document.getElementById('dailyReviewBranch');
+    const dailyReviewSalesCash = document.getElementById('dailyReviewSalesCash');
+    const dailyReviewSalesElectronic = document.getElementById('dailyReviewSalesElectronic');
+    const dailyReviewSalesParts = document.getElementById('dailyReviewSalesParts');
+    const dailyReviewSalesAccessories = document.getElementById('dailyReviewSalesAccessories');
+    const dailyReviewPurchasesAccessories = document.getElementById('dailyReviewPurchasesAccessories');
+    const dailyReviewPurchasesParts = document.getElementById('dailyReviewPurchasesParts');
+    const dailyReviewPurchasesMechanical = document.getElementById('dailyReviewPurchasesMechanical');
+    const dailyReviewTotalExpenses = document.getElementById('dailyReviewTotalExpenses');
+    const dailyReviewTotalAdvances = document.getElementById('dailyReviewTotalAdvances');
+    const dailyReviewPersonalExpenses = document.getElementById('dailyReviewPersonalExpenses');
+    const dailyReviewPayments = document.getElementById('dailyReviewPayments');
+    const dailyReviewDailyExpenses = document.getElementById('dailyReviewDailyExpenses');
+    const dailyReviewDrawerBalance = document.getElementById('dailyReviewDrawerBalance');
+    const dailyReviewNotes = document.getElementById('dailyReviewNotes');
 
-function editAdvance(advanceId) { openAdvanceModal(advanceId); }
-function editAttendance(attendanceId) { /* تنفيذ لاحق */ }
-function editPayroll(payrollId) { /* تنفيذ لاحق */ }
-function editSupplier(supplierId) { /* تنفيذ لاحق */ }
-function editPayment(paymentId) { /* تنفيذ لاحق */ }
-function editExpense(expenseId) { /* تنفيذ لاحق */ }
-function editDailyReview(reviewId) { /* تنفيذ لاحق */ }
-
-function deleteAdvance(advanceId) {
-    if (confirm('هل أنت متأكد من حذف هذه السلفة؟')) {
-        AppData.advances = AppData.advances.filter(adv => adv.id !== advanceId);
-        showNotification('تم حذف السلفة بنجاح', 'success');
-        renderAdvancesTable();
-        updateDashboard();
+    if (reviewId) {
+        if (modalTitle) modalTitle.textContent = 'تعديل المراجعة اليومية';
+        const review = AppData.dailyReview.find(rev => rev.id === reviewId);
+        if (review) {
+            if (dailyReviewDate) dailyReviewDate.value = review.date;
+            if (dailyReviewBranch) dailyReviewBranch.value = review.branch;
+            if (dailyReviewSalesCash) dailyReviewSalesCash.value = review.salesCash;
+            if (dailyReviewSalesElectronic) dailyReviewSalesElectronic.value = review.salesElectronic;
+            if (dailyReviewSalesParts) dailyReviewSalesParts.value = review.salesParts;
+            if (dailyReviewSalesAccessories) dailyReviewSalesAccessories.value = review.salesAccessories;
+            if (dailyReviewPurchasesAccessories) dailyReviewPurchasesAccessories.value = review.purchasesAccessories;
+            if (dailyReviewPurchasesParts) dailyReviewPurchasesParts.value = review.purchasesParts;
+            if (dailyReviewPurchasesMechanical) dailyReviewPurchasesMechanical.value = review.purchasesMechanical;
+            if (dailyReviewTotalExpenses) dailyReviewTotalExpenses.value = review.totalExpenses;
+            if (dailyReviewTotalAdvances) dailyReviewTotalAdvances.value = review.totalAdvances;
+            if (dailyReviewPersonalExpenses) dailyReviewPersonalExpenses.value = review.personalExpenses;
+            if (dailyReviewPayments) dailyReviewPayments.value = review.payments;
+            if (dailyReviewDailyExpenses) dailyReviewDailyExpenses.value = review.dailyExpenses;
+            if (dailyReviewDrawerBalance) dailyReviewDrawerBalance.value = review.drawerBalance;
+            if (dailyReviewNotes) dailyReviewNotes.value = review.notes;
+        }
+    } else {
+        if (modalTitle) modalTitle.textContent = 'إضافة مراجعة يومية جديدة';
+        if (dailyReviewDate) dailyReviewDate.value = new Date().toISOString().split('T')[0];
+        if (dailyReviewBranch) dailyReviewBranch.value = AppConfig.branches[0] || '';
+        // تعيين قيم افتراضية للحقول الأخرى
+        const defaultValue = 0;
+        if (dailyReviewSalesCash) dailyReviewSalesCash.value = defaultValue;
+        if (dailyReviewSalesElectronic) dailyReviewSalesElectronic.value = defaultValue;
+        if (dailyReviewSalesParts) dailyReviewSalesParts.value = defaultValue;
+        if (dailyReviewSalesAccessories) dailyReviewSalesAccessories.value = defaultValue;
+        if (dailyReviewPurchasesAccessories) dailyReviewPurchasesAccessories.value = defaultValue;
+        if (dailyReviewPurchasesParts) dailyReviewPurchasesParts.value = defaultValue;
+        if (dailyReviewPurchasesMechanical) dailyReviewPurchasesMechanical.value = defaultValue;
+        if (dailyReviewTotalExpenses) dailyReviewTotalExpenses.value = defaultValue;
+        if (dailyReviewTotalAdvances) dailyReviewTotalAdvances.value = defaultValue;
+        if (dailyReviewPersonalExpenses) dailyReviewPersonalExpenses.value = defaultValue;
+        if (dailyReviewPayments) dailyReviewPayments.value = defaultValue;
+        if (dailyReviewDailyExpenses) dailyReviewDailyExpenses.value = defaultValue;
+        if (dailyReviewDrawerBalance) dailyReviewDrawerBalance.value = defaultValue;
+        if (dailyReviewNotes) dailyReviewNotes.value = '';
     }
+
+    openModal('dailyReviewModal');
 }
 
-function deleteAttendance(attendanceId) {
-    if (confirm('هل أنت متأكد من حذف سجل الحضور؟')) {
-        AppData.attendance = AppData.attendance.filter(att => att.id !== attendanceId);
-        showNotification('تم حذف سجل الحضور بنجاح', 'success');
-        renderAttendanceTable();
+function saveDailyReview(formData) {
+    const dailyReviewData = {
+        date: formData.get('date'),
+        branch: formData.get('branch'),
+        salesCash: parseFloat(formData.get('salesCash')) || 0,
+        salesElectronic: parseFloat(formData.get('salesElectronic')) || 0,
+        salesParts: parseFloat(formData.get('salesParts')) || 0,
+        salesAccessories: parseFloat(formData.get('salesAccessories')) || 0,
+        purchasesAccessories: parseFloat(formData.get('purchasesAccessories')) || 0,
+        purchasesParts: parseFloat(formData.get('purchasesParts')) || 0,
+        purchasesMechanical: parseFloat(formData.get('purchasesMechanical')) || 0,
+        totalExpenses: parseFloat(formData.get('totalExpenses')) || 0,
+        totalAdvances: parseFloat(formData.get('totalAdvances')) || 0,
+        personalExpenses: parseFloat(formData.get('personalExpenses')) || 0,
+        payments: parseFloat(formData.get('payments')) || 0,
+        dailyExpenses: parseFloat(formData.get('dailyExpenses')) || 0,
+        drawerBalance: parseFloat(formData.get('drawerBalance')) || 0,
+        notes: formData.get('notes') || ''
+    };
+
+    if (editingId) {
+        const index = AppData.dailyReview.findIndex(rev => rev.id === editingId);
+        if (index !== -1) {
+            AppData.dailyReview[index] = { ...AppData.dailyReview[index], ...dailyReviewData };
+            showNotification('تم تحديث المراجعة اليومية بنجاح', 'success');
+        }
+    } else {
+        const newDailyReview = { id: generateId('dailyReview'), ...dailyReviewData };
+        AppData.dailyReview.push(newDailyReview);
+        showNotification('تم إضافة المراجعة اليومية بنجاح', 'success');
     }
+
+    closeModal('dailyReviewModal');
+    renderDailyReviewTable();
 }
 
-function deletePayroll(payrollId) {
-    if (confirm('هل أنت متأكد من حذف سجل الراتب؟')) {
-        AppData.payroll = AppData.payroll.filter(pay => pay.id !== payrollId);
-        showNotification('تم حذف سجل الراتب بنجاح', 'success');
-        renderPayrollTable();
-    }
-}
-
-function deleteSupplier(supplierId) {
-    if (confirm('هل أنت متأكد من حذف هذا المورد؟')) {
-        AppData.suppliers = AppData.suppliers.filter(sup => sup.id !== supplierId);
-        AppData.payments = AppData.payments.filter(pay => pay.supplierId !== supplierId);
-        showNotification('تم حذف المورد بنجاح', 'success');
-        renderSuppliersTable();
-    }
-}
-
-function deletePayment(paymentId) {
-    if (confirm('هل أنت متأكد من حذف هذه الدفعة؟')) {
-        AppData.payments = AppData.payments.filter(pay => pay.id !== paymentId);
-        showNotification('تم حذف الدفعة بنجاح', 'success');
-        renderPaymentsTable();
-    }
-}
-
-function deleteExpense(expenseId) {
-    if (confirm('هل أنت متأكد من حذف هذا المصروف؟')) {
-        AppData.expenses = AppData.expenses.filter(exp => exp.id !== expenseId);
-        showNotification('تم حذف المصروف بنجاح', 'success');
-        renderExpensesTable();
-        updateDashboard();
-    }
+function editDailyReview(reviewId) {
+    openDailyReviewModal(reviewId);
 }
 
 function deleteDailyReview(reviewId) {
@@ -1008,6 +1386,28 @@ function deleteDailyReview(reviewId) {
         AppData.dailyReview = AppData.dailyReview.filter(rev => rev.id !== reviewId);
         showNotification('تم حذف المراجعة بنجاح', 'success');
         renderDailyReviewTable();
+    }
+}
+
+function viewDailyReviewDetails(reviewId) {
+    const review = AppData.dailyReview.find(rev => rev.id === reviewId);
+    if (review) {
+        alert(`تفاصيل المراجعة اليومية:\n\nالفرع: ${review.branch}\nالتاريخ: ${formatDate(review.date)}\nالمبيعات النقدية: ${formatCurrency(review.salesCash)}\nالمبيعات الإلكترونية: ${formatCurrency(review.salesElectronic)}\nرصيد الدرج: ${formatCurrency(review.drawerBalance)}`);
+    }
+}
+
+// =================================================================
+// وظائف الحذف والتعديل
+// =================================================================
+
+function editAdvance(advanceId) { openAdvanceModal(advanceId); }
+
+function deleteAdvance(advanceId) {
+    if (confirm('هل أنت متأكد من حذف هذه السلفة؟')) {
+        AppData.advances = AppData.advances.filter(adv => adv.id !== advanceId);
+        showNotification('تم حذف السلفة بنجاح', 'success');
+        renderAdvancesTable();
+        updateDashboard();
     }
 }
 
@@ -1074,23 +1474,318 @@ function generateEmployeesReport() {
 }
 
 function generateAdvancesReport() {
-    showNotification('تم إنشاء تقرير السلف', 'success');
+    const reportWindow = window.open('', '_blank');
+    const reportContent = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>تقرير السلف - ${AppConfig.companyName}</title>
+            <style>
+                body { font-family: 'Cairo', Arial, sans-serif; direction: rtl; }
+                .header { text-align: center; margin-bottom: 30px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>${AppConfig.companyName}</h1>
+                <h2>تقرير السلف</h2>
+                <p>التاريخ: ${formatDate(new Date().toISOString().split('T')[0])}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>التاريخ</th>
+                        <th>اسم الموظف</th>
+                        <th>مبلغ السلفة</th>
+                        <th>المبلغ المسدد</th>
+                        <th>المبلغ المتبقي</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${AppData.advances.map(adv => {
+                        const employee = AppData.employees.find(emp => emp.id === adv.employeeId);
+                        const remaining = adv.amount - adv.payment;
+                        return `
+                            <tr>
+                                <td>${adv.id}</td>
+                                <td>${formatDate(adv.date)}</td>
+                                <td>${employee?.name || 'غير محدد'}</td>
+                                <td>${formatCurrency(adv.amount)}</td>
+                                <td>${formatCurrency(adv.payment)}</td>
+                                <td>${formatCurrency(remaining)}</td>
+                                <td>${adv.notes}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+            <script>window.print();</script>
+        </body>
+        </html>
+    `;
+    reportWindow.document.write(reportContent);
+    reportWindow.document.close();
 }
 
 function generateAttendanceReport() {
-    showNotification('تم إنشاء تقرير الحضور', 'success');
+    const reportWindow = window.open('', '_blank');
+    const reportContent = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>تقرير الحضور - ${AppConfig.companyName}</title>
+            <style>
+                body { font-family: 'Cairo', Arial, sans-serif; direction: rtl; }
+                .header { text-align: center; margin-bottom: 30px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>${AppConfig.companyName}</h1>
+                <h2>تقرير الحضور والانصراف</h2>
+                <p>التاريخ: ${formatDate(new Date().toISOString().split('T')[0])}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>التاريخ</th>
+                        <th>اسم الموظف</th>
+                        <th>وقت الحضور</th>
+                        <th>وقت الانصراف</th>
+                        <th>عدد الساعات</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${AppData.attendance.map(att => {
+                        const employee = AppData.employees.find(emp => emp.id === att.employeeId);
+                        const hours = calculateHours(att.checkIn, att.checkOut);
+                        return `
+                            <tr>
+                                <td>${att.id}</td>
+                                <td>${formatDate(att.date)}</td>
+                                <td>${employee?.name || 'غير محدد'}</td>
+                                <td>${att.checkIn}</td>
+                                <td>${att.checkOut}</td>
+                                <td>${hours.toFixed(2)} ساعة</td>
+                                <td>${att.notes}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+            <script>window.print();</script>
+        </body>
+        </html>
+    `;
+    reportWindow.document.write(reportContent);
+    reportWindow.document.close();
 }
 
 function generatePayrollReport() {
-    showNotification('تم إنشاء تقرير المرتبات', 'success');
+    const reportWindow = window.open('', '_blank');
+    const reportContent = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>تقرير المرتبات - ${AppConfig.companyName}</title>
+            <style>
+                body { font-family: 'Cairo', Arial, sans-serif; direction: rtl; }
+                .header { text-align: center; margin-bottom: 30px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>${AppConfig.companyName}</h1>
+                <h2>تقرير المرتبات</h2>
+                <p>التاريخ: ${formatDate(new Date().toISOString().split('T')[0])}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>التاريخ</th>
+                        <th>اسم الموظف</th>
+                        <th>الراتب الأساسي</th>
+                        <th>المبلغ المصرف</th>
+                        <th>المبلغ المتبقي</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${AppData.payroll.map(pay => {
+                        const employee = AppData.employees.find(emp => emp.id === pay.employeeId);
+                        const remaining = pay.basicSalary - pay.disbursed;
+                        return `
+                            <tr>
+                                <td>${pay.id}</td>
+                                <td>${formatDate(pay.date)}</td>
+                                <td>${employee?.name || 'غير محدد'}</td>
+                                <td>${formatCurrency(pay.basicSalary)}</td>
+                                <td>${formatCurrency(pay.disbursed)}</td>
+                                <td>${formatCurrency(remaining)}</td>
+                                <td>${pay.notes}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+            <script>window.print();</script>
+        </body>
+        </html>
+    `;
+    reportWindow.document.write(reportContent);
+    reportWindow.document.close();
 }
 
 function generateExpensesReport() {
-    showNotification('تم إنشاء تقرير المصاريف', 'success');
+    const reportWindow = window.open('', '_blank');
+    const reportContent = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>تقرير المصاريف - ${AppConfig.companyName}</title>
+            <style>
+                body { font-family: 'Cairo', Arial, sans-serif; direction: rtl; }
+                .header { text-align: center; margin-bottom: 30px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>${AppConfig.companyName}</h1>
+                <h2>تقرير المصاريف</h2>
+                <p>التاريخ: ${formatDate(new Date().toISOString().split('T')[0])}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>التاريخ</th>
+                        <th>نوع المصروف</th>
+                        <th>اسم المصروف</th>
+                        <th>المبلغ</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${AppData.expenses.map(exp => `
+                        <tr>
+                            <td>${exp.id}</td>
+                            <td>${formatDate(exp.date)}</td>
+                            <td>${exp.type}</td>
+                            <td>${exp.name}</td>
+                            <td>${formatCurrency(exp.amount)}</td>
+                            <td>${exp.notes}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <script>window.print();</script>
+        </body>
+        </html>
+    `;
+    reportWindow.document.write(reportContent);
+    reportWindow.document.close();
 }
 
 function generateSuppliersReport() {
-    showNotification('تم إنشاء تقرير الموردين', 'success');
+    const reportWindow = window.open('', '_blank');
+    const reportContent = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>تقرير الموردين - ${AppConfig.companyName}</title>
+            <style>
+                body { font-family: 'Cairo', Arial, sans-serif; direction: rtl; }
+                .header { text-align: center; margin-bottom: 30px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>${AppConfig.companyName}</h1>
+                <h2>تقرير الموردين والدفعات</h2>
+                <p>التاريخ: ${formatDate(new Date().toISOString().split('T')[0])}</p>
+            </div>
+            <h3>الموردين</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>اسم المورد</th>
+                        <th>رقم الاتصال</th>
+                        <th>العنوان</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${AppData.suppliers.map(sup => `
+                        <tr>
+                            <td>${sup.id}</td>
+                            <td>${sup.name}</td>
+                            <td>${sup.contact}</td>
+                            <td>${sup.address}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <h3>الدفعات</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>التاريخ</th>
+                        <th>اسم المورد</th>
+                        <th>مبلغ الدفعة</th>
+                        <th>إجمالي الفاتورة</th>
+                        <th>المرتجعات</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${AppData.payments.map(pay => {
+                        const supplier = AppData.suppliers.find(sup => sup.id === pay.supplierId);
+                        return `
+                            <tr>
+                                <td>${pay.id}</td>
+                                <td>${formatDate(pay.date)}</td>
+                                <td>${supplier?.name || 'غير محدد'}</td>
+                                <td>${formatCurrency(pay.payment)}</td>
+                                <td>${formatCurrency(pay.invoiceTotal)}</td>
+                                <td>${pay.returnedItems}</td>
+                                <td>${pay.notes}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+            <script>window.print();</script>
+        </body>
+        </html>
+    `;
+    reportWindow.document.write(reportContent);
+    reportWindow.document.close();
 }
 
 // =================================================================
@@ -1098,43 +1793,27 @@ function generateSuppliersReport() {
 // =================================================================
 
 function openAttendanceModal() {
-    populateEmployeeSelect('attendanceEmployee');
-    document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
-    openModal('attendanceModal');
+    openAttendanceModal();
 }
 
 function openPayrollModal() {
-    populateEmployeeSelect('payrollEmployee');
-    document.getElementById('payrollDate').value = new Date().toISOString().split('T')[0];
-    openModal('payrollModal');
+    openPayrollModal();
 }
 
 function openSupplierModal() {
-    openModal('supplierModal');
+    openSupplierModal();
 }
 
 function openPaymentModal() {
-    // ملء قائمة الموردين
-    const select = document.getElementById('paymentSupplier');
-    if (select) {
-        const options = ['<option value="">اختر المورد</option>'];
-        AppData.suppliers.forEach(sup => {
-            options.push(`<option value="${sup.id}">${sup.name}</option>`);
-        });
-        select.innerHTML = options.join('');
-    }
-    document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
-    openModal('paymentModal');
+    openPaymentModal();
 }
 
 function openExpenseModal() {
-    document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
-    openModal('expenseModal');
+    openExpenseModal();
 }
 
 function openDailyReviewModal() {
-    document.getElementById('dailyReviewDate').value = new Date().toISOString().split('T')[0];
-    openModal('dailyReviewModal');
+    openDailyReviewModal();
 }
 
 function viewDailyReviewDetails(reviewId) {
@@ -1204,6 +1883,60 @@ function initializeFormHandlers() {
             e.preventDefault();
             const formData = new FormData(advanceForm);
             saveAdvance(formData);
+        });
+    }
+
+    const attendanceForm = document.getElementById('attendanceForm');
+    if (attendanceForm) {
+        attendanceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(attendanceForm);
+            saveAttendance(formData);
+        });
+    }
+
+    const payrollForm = document.getElementById('payrollForm');
+    if (payrollForm) {
+        payrollForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(payrollForm);
+            savePayroll(formData);
+        });
+    }
+
+    const supplierForm = document.getElementById('supplierForm');
+    if (supplierForm) {
+        supplierForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(supplierForm);
+            saveSupplier(formData);
+        });
+    }
+
+    const paymentForm = document.getElementById('paymentForm');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(paymentForm);
+            savePayment(formData);
+        });
+    }
+
+    const expenseForm = document.getElementById('expenseForm');
+    if (expenseForm) {
+        expenseForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(expenseForm);
+            saveExpense(formData);
+        });
+    }
+
+    const dailyReviewForm = document.getElementById('dailyReviewForm');
+    if (dailyReviewForm) {
+        dailyReviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(dailyReviewForm);
+            saveDailyReview(formData);
         });
     }
 }
