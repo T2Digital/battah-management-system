@@ -622,6 +622,305 @@
         </div>
     </div>
 
+    <!-- نافذة إضافة حضور -->
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="attendanceModalTitle">تسجيل حضور جديد</h3>
+                <button class="close-btn" onclick="closeModal('attendanceModal')">&times;</button>
+            </div>
+            <form id="attendanceForm" class="modal-form">
+                <div class="form-group">
+                    <label for="attendanceEmployee">الموظف *</label>
+                    <select id="attendanceEmployee" name="employeeId" required>
+                        <option value="">اختر الموظف</option>
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="attendanceDate">التاريخ *</label>
+                    <input type="date" id="attendanceDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="attendanceCheckIn">وقت الحضور *</label>
+                    <input type="time" id="attendanceCheckIn" name="checkIn" required>
+                </div>
+                <div class="form-group">
+                    <label for="attendanceCheckOut">وقت الانصراف *</label>
+                    <input type="time" id="attendanceCheckOut" name="checkOut" required>
+                </div>
+                <div class="form-group">
+                    <label for="attendanceNotes">ملاحظات</label>
+                    <textarea id="attendanceNotes" name="notes" rows="3" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ سجل الحضور
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('attendanceModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة راتب -->
+    <div id="payrollModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="payrollModalTitle">إضافة دفع راتب جديد</h3>
+                <button class="close-btn" onclick="closeModal('payrollModal')">&times;</button>
+            </div>
+            <form id="payrollForm" class="modal-form">
+                <div class="form-group">
+                    <label for="payrollEmployee">الموظف *</label>
+                    <select id="payrollEmployee" name="employeeId" required>
+                        <option value="">اختر الموظف</option>
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="payrollDate">التاريخ *</label>
+                    <input type="date" id="payrollDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="payrollBasicSalary">الراتب الأساسي (ج.م) *</label>
+                    <input type="number" id="payrollBasicSalary" name="basicSalary" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="payrollDisbursed">المبلغ المصرف (ج.م) *</label>
+                    <input type="number" id="payrollDisbursed" name="disbursed" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="payrollNotes">ملاحظات</label>
+                    <textarea id="payrollNotes" name="notes" rows="3" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ دفع الراتب
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('payrollModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة مورد -->
+    <div id="supplierModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="supplierModalTitle">إضافة مورد جديد</h3>
+                <button class="close-btn" onclick="closeModal('supplierModal')">&times;</button>
+            </div>
+            <form id="supplierForm" class="modal-form">
+                <div class="form-group">
+                    <label for="supplierName">اسم المورد *</label>
+                    <input type="text" id="supplierName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="supplierContact">رقم الاتصال *</label>
+                    <input type="tel" id="supplierContact" name="contact" required placeholder="01xxxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label for="supplierAddress">العنوان *</label>
+                    <textarea id="supplierAddress" name="address" rows="3" required placeholder="العنوان الكامل"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ بيانات المورد
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('supplierModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة دفعة -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="paymentModalTitle">إضافة دفعة جديدة</h3>
+                <button class="close-btn" onclick="closeModal('paymentModal')">&times;</button>
+            </div>
+            <form id="paymentForm" class="modal-form">
+                <div class="form-group">
+                    <label for="paymentSupplier">المورد *</label>
+                    <select id="paymentSupplier" name="supplierId" required>
+                        <option value="">اختر المورد</option>
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentDate">التاريخ *</label>
+                    <input type="date" id="paymentDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentPayment">مبلغ الدفعة (ج.م) *</label>
+                    <input type="number" id="paymentPayment" name="payment" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentInvoiceTotal">إجمالي الفاتورة (ج.م) *</label>
+                    <input type="number" id="paymentInvoiceTotal" name="invoiceTotal" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentReturnedItems">المرتجعات</label>
+                    <input type="text" id="paymentReturnedItems" name="returnedItems" placeholder="القطع المرتجعة">
+                </div>
+                <div class="form-group">
+                    <label for="paymentNotes">ملاحظات</label>
+                    <textarea id="paymentNotes" name="notes" rows="3" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ الدفعة
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('paymentModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة مصروف -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="expenseModalTitle">إضافة مصروف جديد</h3>
+                <button class="close-btn" onclick="closeModal('expenseModal')">&times;</button>
+            </div>
+            <form id="expenseForm" class="modal-form">
+                <div class="form-group">
+                    <label for="expenseDate">التاريخ *</label>
+                    <input type="date" id="expenseDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseType">نوع المصروف *</label>
+                    <select id="expenseType" name="type" required>
+                        <option value="">اختر النوع</option>
+                        <option value="شخصية">مصاريف شخصية</option>
+                        <option value="عامة">مصاريف عامة</option>
+                        <option value="موظفين">مصاريف الموظفين</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expenseName">اسم المصروف *</label>
+                    <input type="text" id="expenseName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseAmount">المبلغ (ج.م) *</label>
+                    <input type="number" id="expenseAmount" name="amount" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseNotes">ملاحظات</label>
+                    <textarea id="expenseNotes" name="notes" rows="3" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ المصروف
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('expenseModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة مراجعة يومية -->
+    <div id="dailyReviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="dailyReviewModalTitle">إضافة مراجعة يومية جديدة</h3>
+                <button class="close-btn" onclick="closeModal('dailyReviewModal')">&times;</button>
+            </div>
+            <form id="dailyReviewForm" class="modal-form">
+                <div class="form-group">
+                    <label for="dailyReviewDate">التاريخ *</label>
+                    <input type="date" id="dailyReviewDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewBranch">الفرع *</label>
+                    <select id="dailyReviewBranch" name="branch" required>
+                        <option value="">اختر الفرع</option>
+                        <option value="مركز الصيانة">مركز الصيانة</option>
+                        <option value="الأصلي">الأصلي</option>
+                        <option value="فرع ٣">فرع ٣</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewSalesCash">المبيعات النقدية (ج.م)</label>
+                    <input type="number" id="dailyReviewSalesCash" name="salesCash" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewSalesElectronic">المبيعات الإلكترونية (ج.م)</label>
+                    <input type="number" id="dailyReviewSalesElectronic" name="salesElectronic" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewSalesParts">مبيعات قطع غيار (ج.م)</label>
+                    <input type="number" id="dailyReviewSalesParts" name="salesParts" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewSalesAccessories">مبيعات كماليات (ج.م)</label>
+                    <input type="number" id="dailyReviewSalesAccessories" name="salesAccessories" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewPurchasesAccessories">مشتريات كماليات (ج.م)</label>
+                    <input type="number" id="dailyReviewPurchasesAccessories" name="purchasesAccessories" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewPurchasesParts">مشتريات قطع غيار (ج.م)</label>
+                    <input type="number" id="dailyReviewPurchasesParts" name="purchasesParts" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewPurchasesMechanical">مشتريات ميكانيكية (ج.م)</label>
+                    <input type="number" id="dailyReviewPurchasesMechanical" name="purchasesMechanical" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewTotalExpenses">إجمالي المصاريف (ج.م)</label>
+                    <input type="number" id="dailyReviewTotalExpenses" name="totalExpenses" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewTotalAdvances">إجمالي السلف (ج.م)</label>
+                    <input type="number" id="dailyReviewTotalAdvances" name="totalAdvances" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewPersonalExpenses">مصاريف شخصية (ج.م)</label>
+                    <input type="number" id="dailyReviewPersonalExpenses" name="personalExpenses" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewPayments">المدفوعات (ج.م)</label>
+                    <input type="number" id="dailyReviewPayments" name="payments" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewDailyExpenses">مصاريف يومية (ج.م)</label>
+                    <input type="number" id="dailyReviewDailyExpenses" name="dailyExpenses" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewDrawerBalance">رصيد الدرج (ج.م)</label>
+                    <input type="number" id="dailyReviewDrawerBalance" name="drawerBalance" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="dailyReviewNotes">ملاحظات</label>
+                    <textarea id="dailyReviewNotes" name="notes" rows="3" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ المراجعة اليومية
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('dailyReviewModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- رسائل التنبيه -->
     <div id="notifications" class="notifications-container"></div>
 
@@ -629,5 +928,4 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="app.js"></script>
 </body>
-
 </html>
