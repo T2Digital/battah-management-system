@@ -1155,13 +1155,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeApp() {
     console.log('initializeApp started');
-    // إخفاء الـ spinner بعد 1.5 ثانية بغض النظر عن الأخطاء
-    setTimeout(() => {
-        console.log('Hiding loading spinner');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        if (loadingSpinner) loadingSpinner.style.display = 'none';
-    }, 1500);
-
     try {
         console.log('Updating current date');
         updateCurrentDate();
