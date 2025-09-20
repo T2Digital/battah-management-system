@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شركة بطاح لقطع غيار السيارات - نظام الإدارة المتكامل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- شريط التحميل -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>جاري تحميل نظام إدارة شركة بطاح...</p>
+    </div>
+
+    <!-- رأس الصفحة -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-car icon-car"></i>
+                    <div class="company-info">
+                        <h1>شركة بطاح لقطع غيار السيارات</h1>
+                        <p>نظام الإدارة المتكامل - الإصدار الاحترافي</p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="date-display">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                    <div class="user-profile">
+                        <i class="fas fa-user-circle"></i>
+                        <span>المدير العام</span>
+                    </div>
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- شريط الملاحة الجانبي -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <button class="nav-button active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>لوحة التحكم</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="employees">
+                        <i class="fas fa-users"></i>
+                        <span>إدارة الموظفين</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="advances">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>سلف الموظفين</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="attendance">
+                        <i class="fas fa-clock"></i>
+                        <span>الحضور والانصراف</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="payroll">
+                        <i class="fas fa-money-check-alt"></i>
+                        <span>القبض والمرتبات</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="suppliers">
+                        <i class="fas fa-truck"></i>
+                        <span>الموردين والدفعات</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="expenses">
+                        <i class="fas fa-receipt"></i>
+                        <span>المصاريف</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="daily-review">
+                        <i class="fas fa-chart-line"></i>
+                        <span>مراجعة اليوميات</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-button" data-section="reports">
+                        <i class="fas fa-file-alt"></i>
+                        <span>التقارير</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content" id="mainContent">
+        <!-- لوحة التحكم -->
+        <section id="dashboard-section" class="content-section active">
+            <div class="section-header">
+                <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
+            </div>
+
+            <!-- بطاقات الإحصائيات السريعة -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalEmployees">0</h3>
+                        <p>إجمالي الموظفين</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalSalaries">0 ج.م</h3>
+                        <p>إجمالي الرواتب الشهرية</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalAdvances">0 ج.م</h3>
+                        <p>إجمالي السلف المتبقية</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalExpenses">0 ج.م</h3>
+                        <p>مصاريف الشهر الحالي</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الرسوم البيانية والتحليلات -->
+            <div class="dashboard-charts">
+                <div class="chart-container">
+                    <h3>المبيعات اليومية - آخر أسبوع</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>توزيع المصاريف حسب النوع</h3>
+                    <canvas id="expensesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- الأنشطة الأخيرة -->
+            <div class="recent-activities">
+                <h3><i class="fas fa-history"></i> الأنشطة الأخيرة</h3>
+                <div id="activitiesLog" class="activities-list">
+                    <!-- سيتم ملؤها تلقائياً -->
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الموظفين -->
+        <section id="employees-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> إدارة الموظفين</h2>
+                <button class="btn btn-primary" onclick="openEmployeeModal()">
+                    <i class="fas fa-plus"></i> إضافة موظف جديد
+                </button>
+            </div>
+
+            <!-- فلاتر البحث -->
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="employeeSearch" placeholder="البحث عن موظف بالاسم أو المنصب...">
+                </div>
+                <select id="positionFilter" class="filter-select">
+                    <option value="">جميع المناصب</option>
+                    <option value="مدير عام">مدير عام</option>
+                    <option value="مدير فرع">مدير فرع</option>
+                    <option value="محاسب رئيسي">محاسب رئيسي</option>
+                    <option value="محاسب">محاسب</option>
+                    <option value="فني أول">فني أول</option>
+                    <option value="فني">فني</option>
+                    <option value="أمين مخزن">أمين مخزن</option>
+                    <option value="عامل">عامل</option>
+                    <option value="سائق">سائق</option>
+                </select>
+            </div>
+
+            <!-- جدول الموظفين -->
+            <div class="table-container">
+                <table class="data-table" id="employeesTable">
+                    <thead>
+                        <tr>
+                            <th>الرقم</th>
+                            <th>الاسم</th>
+                            <th>المنصب</th>
+                            <th>الراتب الأساسي</th>
+                            <th>تاريخ التوظيف</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeesTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم السلف -->
+        <section id="advances-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-hand-holding-usd"></i> سلف الموظفين</h2>
+                <button class="btn btn-primary" onclick="openAdvanceModal()">
+                    <i class="fas fa-plus"></i> إضافة سلفة جديدة
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="advancesTable">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>اسم الموظف</th>
+                            <th>مبلغ السلفة</th>
+                            <th>المبلغ المتبقي</th>
+                            <th>المبلغ المسدد</th>
+                            <th>ملاحظات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="advancesTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم الحضور -->
+        <section id="attendance-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-clock"></i> الحضور والانصراف</h2>
+                <button class="btn btn-primary" onclick="openAttendanceModal()">
+                    <i class="fas fa-plus"></i> تسجيل حضور جديد
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>اسم الموظف</th>
+                            <th>وقت الحضور</th>
+                            <th>وقت الانصراف</th>
+                            <th>عدد الساعات</th>
+                            <th>ملاحظات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم المرتبات -->
+        <section id="payroll-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-money-check-alt"></i> القبض والمرتبات</h2>
+                <button class="btn btn-primary" onclick="openPayrollModal()">
+                    <i class="fas fa-plus"></i> إضافة دفع راتب
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="payrollTable">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>اسم الموظف</th>
+                            <th>الراتب الأساسي</th>
+                            <th>المبلغ المتبقي</th>
+                            <th>المبلغ المصرف</th>
+                            <th>ملاحظات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payrollTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم الموردين -->
+        <section id="suppliers-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-truck"></i> الموردين والدفعات</h2>
+                <div>
+                    <button class="btn btn-primary" onclick="openSupplierModal()">
+                        <i class="fas fa-plus"></i> إضافة مورد جديد
+                    </button>
+                    <button class="btn btn-secondary" onclick="openPaymentModal()">
+                        <i class="fas fa-money-bill"></i> إضافة دفعة
+                    </button>
+                </div>
+            </div>
+
+            <!-- تبديل بين عرض الموردين والدفعات -->
+            <div class="filters-section">
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="showSuppliersBtn" onclick="showSuppliersView()">
+                        <i class="fas fa-truck"></i> الموردين
+                    </button>
+                    <button class="btn btn-secondary" id="showPaymentsBtn" onclick="showPaymentsView()">
+                        <i class="fas fa-money-bill"></i> الدفعات
+                    </button>
+                </div>
+            </div>
+
+            <!-- جدول الموردين -->
+            <div id="suppliersView" class="table-container">
+                <table class="data-table" id="suppliersTable">
+                    <thead>
+                        <tr>
+                            <th>الرقم</th>
+                            <th>اسم المورد</th>
+                            <th>رقم الاتصال</th>
+                            <th>العنوان</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="suppliersTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- جدول المدفوعات -->
+            <div id="paymentsView" class="table-container" style="display: none;">
+                <table class="data-table" id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>اسم المورد</th>
+                            <th>مبلغ الدفعة</th>
+                            <th>إجمالي الفاتورة</th>
+                            <th>المرتجعات</th>
+                            <th>ملاحظات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم المصاريف -->
+        <section id="expenses-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-receipt"></i> المصاريف</h2>
+                <button class="btn btn-primary" onclick="openExpenseModal()">
+                    <i class="fas fa-plus"></i> إضافة مصروف جديد
+                </button>
+            </div>
+
+            <!-- فلاتر المصاريف -->
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="expenseSearch" placeholder="البحث في المصاريف...">
+                </div>
+                <select id="expenseTypeFilter" class="filter-select">
+                    <option value="">جميع الأنواع</option>
+                    <option value="شخصية">مصاريف شخصية</option>
+                    <option value="عامة">مصاريف عامة</option>
+                    <option value="موظفين">مصاريف الموظفين</option>
+                </select>
+                <input type="date" id="expenseDateFilter" class="filter-select">
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>نوع المصروف</th>
+                            <th>اسم المصروف</th>
+                            <th>المبلغ</th>
+                            <th>ملاحظات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم مراجعة اليوميات -->
+        <section id="daily-review-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> مراجعة اليوميات</h2>
+                <button class="btn btn-primary" onclick="openDailyReviewModal()">
+                    <i class="fas fa-plus"></i> إضافة مراجعة يومية
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="dailyReviewTable">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الفرع</th>
+                            <th>المبيعات النقدية</th>
+                            <th>المبيعات الإلكترونية</th>
+                            <th>مبيعات قطع غيار</th>
+                            <th>مبيعات كماليات</th>
+                            <th>رصيد الدرج</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dailyReviewTableBody">
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم التقارير -->
+        <section id="reports-section" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-file-alt"></i> التقارير</h2>
+            </div>
+
+            <!-- بطاقات التقارير -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="generateEmployeesReport()">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>تقرير الموظفين</h3>
+                        <p>بيانات شاملة لجميع الموظفين</p>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="generateAdvancesReport()">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>تقرير السلف</h3>
+                        <p>سلف الموظفين والمتبقي منها</p>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="generateAttendanceReport()">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>تقرير الحضور</h3>
+                        <p>حضور وانصراف الموظفين</p>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="generatePayrollReport()">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>تقرير المرتبات</h3>
+                        <p>دفعات الرواتب والمستحقات</p>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="generateExpensesReport()">
+                    <div class="stat-icon">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>تقرير المصاريف</h3>
+                        <p>تفصيل المصاريف حسب النوع</p>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="generateSuppliersReport()">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>تقرير الموردين</h3>
+                        <p>المدفوعات والفواتير</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- النوافذ المنبثقة (Modals) -->
+
+    <!-- نافذة إضافة موظف -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="employeeModalTitle">إضافة موظف جديد</h3>
+                <button class="close-btn" onclick="closeModal('employeeModal')">&times;</button>
+            </div>
+            <form id="employeeForm" class="modal-form">
+                <div class="form-group">
+                    <label for="employeeName">اسم الموظف *</label>
+                    <input type="text" id="employeeName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeePosition">المنصب *</label>
+                    <select id="employeePosition" name="position" required>
+                        <option value="">اختر المنصب</option>
+                        <option value="مدير عام">مدير عام</option>
+                        <option value="مدير فرع">مدير فرع</option>
+                        <option value="محاسب رئيسي">محاسب رئيسي</option>
+                        <option value="محاسب">محاسب</option>
+                        <option value="فني أول">فني أول</option>
+                        <option value="فني">فني</option>
+                        <option value="أمين مخزن">أمين مخزن</option>
+                        <option value="عامل">عامل</option>
+                        <option value="سائق">سائق</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employeeSalary">الراتب الأساسي (ج.م) *</label>
+                    <input type="number" id="employeeSalary" name="basicSalary" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeHireDate">تاريخ التوظيف *</label>
+                    <input type="date" id="employeeHireDate" name="hireDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeePhone">رقم الهاتف</label>
+                    <input type="tel" id="employeePhone" name="phone" placeholder="01xxxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label for="employeeAddress">العنوان</label>
+                    <textarea id="employeeAddress" name="address" rows="3" placeholder="العنوان الكامل"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ البيانات
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('employeeModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة سلفة -->
+    <div id="advanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="advanceModalTitle">إضافة سلفة جديدة</h3>
+                <button class="close-btn" onclick="closeModal('advanceModal')">&times;</button>
+            </div>
+            <form id="advanceForm" class="modal-form">
+                <div class="form-group">
+                    <label for="advanceEmployee">الموظف *</label>
+                    <select id="advanceEmployee" name="employeeId" required>
+                        <option value="">اختر الموظف</option>
+                        <!-- سيتم ملؤها تلقائياً -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="advanceDate">التاريخ *</label>
+                    <input type="date" id="advanceDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="advanceAmount">مبلغ السلفة (ج.م) *</label>
+                    <input type="number" id="advanceAmount" name="amount" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="advancePayment">المبلغ المسدد (ج.م)</label>
+                    <input type="number" id="advancePayment" name="payment" min="0" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="advanceNotes">ملاحظات</label>
+                    <textarea id="advanceNotes" name="notes" rows="3" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ السلفة
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('advanceModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- رسائل التنبيه -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- تحميل المكتبات والسكريبت -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
