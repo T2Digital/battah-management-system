@@ -1248,4 +1248,119 @@ body {
     font-weight: 700;
 }
 
+/* تحسين عرض الجداول والاستجابة على جميع الشاشات */
+.table-responsive {
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* إظهار تلميح السحب على الموبايل */
+.table-responsive::after {
+    content: '← اسحب جدولاً عرضياً';
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xs);
+    opacity: 0.8;
+    pointer-events: none;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .table-responsive::after {
+        display: block;
+    }
+}
+
+/* تحسين مسافات الخلايا */
+.data-table th,
+.data-table td {
+    padding: calc(var(--spacing-sm) * 0.75) var(--spacing-md);
+}
+
+/* تصغير حجم الخط في الجداول الصغيرة */
+@media (max-width: 576px) {
+    .data-table {
+        font-size: var(--font-sm);
+    }
+    .data-table th,
+    .data-table td {
+        padding: var(--spacing-sm) calc(var(--spacing-sm) * 1.5);
+        white-space: nowrap;
+    }
+}
+
+/* جعل رؤوس الأعمدة ثابتة عند التمرير */
+.data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: inherit;
+}
+
+/* تظليل الصفوف بالتناوب */
+.data-table tbody tr:nth-child(even) {
+    background-color: var(--bg-tertiary);
+}
+
+/* تحسين المظهر عند التمرير */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-full);
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* بطاقات للأجهزة الصغيرة جدًا */
+@media (max-width: 400px) {
+    .data-table {
+        display: none;
+    }
+    .mobile-card-view {
+        display: block;
+    }
+    .mobile-card-view .card {
+        background: var(--bg-card);
+        margin-bottom: var(--spacing-md);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+    }
+    .mobile-card-view .card p {
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+/* تحسين التمرير السلس */
+html {
+    scroll-behavior: smooth;
+}
+
+/* تعزيز الوصولية */
+.data-table th:focus,
+.data-table td:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+
 /* نهاية ملف التنسيقات */
+
