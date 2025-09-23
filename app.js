@@ -4419,4 +4419,16 @@ function afterLogin(){
 window.onload = function(){
   if(!AppData.currentUser) showLoginModal();
 };
+updateMenuByPermissions();
+
 // =========== نهاية تسجيل الدخول =============
+
+function updateMenuByPermissions() {
+    // مبيعات
+    if (hasPermission("sales")) document.getElementById("salesSectionNav").style.display = "";
+    else document.getElementById("salesSectionNav").style.display = "none";
+    // يومية الفرع
+    if (hasPermission("branch-daily")) document.getElementById("branchDailySectionNav").style.display = "";
+    else document.getElementById("branchDailySectionNav").style.display = "none";
+}
+
