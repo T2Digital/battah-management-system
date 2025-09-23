@@ -200,6 +200,71 @@
                 <div id="activitiesLog" class="activities-list"></div>
             </div>
         </section>
+        <section id="sales-section" class="content-section">
+   <div class="section-header">
+      <h2><i class="fas fa-shopping-cart"></i> بيع مباشر</h2>
+   </div>
+   <form id="salesInvoiceForm" class="modal-form" style="max-width:600px;margin:auto">
+      <div class="form-group">
+         <label for="invoiceCustomer">اسم العميل</label>
+         <input type="text" id="invoiceCustomer" required>
+      </div>
+      <div class="form-group">
+         <label for="invoiceProduct">المنتج</label>
+         <input type="text" id="invoiceProduct" required>
+      </div>
+      <div class="form-group">
+         <label for="invoiceQty">الكمية</label>
+         <input type="number" id="invoiceQty" min="1" value="1" required>
+      </div>
+      <div class="form-group">
+         <label for="invoiceUnitPrice">سعر الوحدة</label>
+         <input type="number" id="invoiceUnitPrice" min="0.01" step="0.01" value="0.00" required>
+      </div>
+      <div class="form-group">
+         <label>الإجمالي</label>
+         <div><strong id="invoiceTotal">0.00</strong> ج.م</div>
+      </div>
+      <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ الفاتورة</button>
+      </div>
+   </form>
+   <hr>
+   <div class="table-container">
+      <table class="data-table">
+         <thead>
+            <tr>
+               <th>الكود</th>
+               <th>العميل</th>
+               <th>المنتج</th>
+               <th>الكمية</th>
+               <th>سعر الوحدة</th>
+               <th>الإجمالي</th>
+               <th>البائع</th>
+               <th>التاريخ</th>
+            </tr>
+         </thead>
+         <tbody id="salesTableBody"></tbody>
+      </table>
+   </div>
+</section>
+        <section id="branch-daily-section" class="content-section">
+  <div class="section-header">
+    <h2><i class="fas fa-clipboard-list"></i> يومية الفرع</h2>
+  </div>
+  <div id="branchDailySummary"></div>
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>البند</th><th>القيمة</th>
+        </tr>
+      </thead>
+      <tbody id="branchDailyTableBody"></tbody>
+    </table>
+  </div>
+</section>
+
 
         <!-- إدارة الموظفين -->
         <section id="employees-section" class="content-section">
@@ -892,5 +957,6 @@
     <script src="app.js"></script>
 </body>
 </html>
+
 
 
