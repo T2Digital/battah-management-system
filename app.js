@@ -4359,3 +4359,34 @@ console.log('   ✅ النوافذ المنبثقة');
 console.log('   ✅ الثيم الفاتح/الداكن');
 console.log('   ✅ التخزين المحلي');
 console.log('💡 جميع الأزرار والوظائف تعمل بكفاءة عالية!');
+
+// =========== نظام المستخدمين والأدوار =============
+
+// تعريف الأدوار والصلاحيات
+const ROLES = {
+  admin: ["*"],
+  branchManager: ["branch-daily", "branch-sales", "branch-receipts", "branch-expenses", "branch-staff"],
+  accountant: ["payroll", "expenses", "advances", "branch-report"],
+  seller: ["sales", "own-receipts"]
+};
+
+// إضافة جدول المستخدمين إن لم يكن موجودا
+if (!AppData.users) {
+  AppData.users = [
+    {id: 1, username: "admin", password: "123456", name: "المدير العام", role: "admin", branch: null, active: true},
+    {id: 2, username: "manager1", password: "123456", name: "مدير فرع القاهرة", role: "branchManager", branch: "القاهرة", active: true},
+    {id: 3, username: "acc1", password: "123456", name: "إداري الرواتب", role: "accountant", branch: null, active: true},
+    {id: 4, username: "seller1", password: "123456", name: "بائع التجزئة", role: "seller", branch: "القاهرة", active: true}
+  ];
+}
+
+AppData.currentUser = null;
+
+// دالة صلاحية المستخدم
+function hasPermission(permission) {
+  if (!AppData.currentUser) return false;
+  if (ROLES[AppData.currentUser.role]?.includes("*")) return true;
+  return ROLES[AppData.currentUser.role]?.includes(permission);
+}
+
+// =========== نهاية نظام المستخدمين والأدوار =============
