@@ -4432,3 +4432,98 @@ function updateMenuByPermissions() {
     else document.getElementById("branchDailySectionNav").style.display = "none";
 }
 
+// سجل فواتير البيع - إضافة أولية في AppData
+if (!AppData.salesInvoices) AppData.salesInvoices = [];
+
+function renderSalesTable() {
+    const tBody = document.getElementById("salesTableBody");
+    if (!tBody) return;
+    let invoices = AppData.salesInvoices;
+    // البائع يري فقط فواتيره، مدير الفرع فواتير الفرع، المدير العام كل الفروع
+    if (AppData.currentUser.role === "seller") {
+        invoices = invoices.filter(inv=>inv.sellerId===AppData.currentUser.id);
+    } else if (AppData.currentUser.role === "branchManager") {
+        invoices = invoices.filter(inv=>inv.branch===AppData.currentUser.branch);
+    }
+    tBody.innerHTML = invoices.length ? invoices.map(inv=>
+        `<tr>
+          <td>${inv.id}</td>
+          <td>${inv.customer}</td>
+          <td>${inv.product}</td>
+          <td>${inv.qty}</td>
+          <td>${inv.unitPrice}</td>
+          <td>${inv.total}</td>
+          <td>${inv.sellerName}</td>
+          <td>${inv.date}</td>
+        </tr>`
+    ).join("") : `<tr><td colspan="8" class="empty-state">لا توجد مبيعات بعد</td></tr>`;
+}
+
+// تحديث الإجمالي
+["invoiceQty", "invoiceUnitPrice"].forEach(id=>{
+   document.getElementById(id).addEventListener("input", ()=>{
+      const qty = parseFloat(document.getElementById("invoiceQty").value||1);
+      const price = parseFloat(document.getElementById("invoiceUnitPrice").value||0);
+      document.getElementById("invoiceTotal").innerText = (qty*price).toFixed(2);
+   });
+});
+
+// اضافة الفاتورة
+document.getElementById("salesInvoiceForm").onsubmit = function(e){
+    e.preventDefault();
+    const inv = {
+        id: (AppData.salesInvoices.length?AppData.salesInvoices[AppData.salesInvoices.length-1].id+1:1),
+        customer: document.getElementById("invoiceCustomer").value,
+        product: document.getElementById("invoiceProduct").value,
+        qty: parseFloat(document.getElementById("invoiceQty").value),
+        unitPrice: parseFloat(document.getElementById("invoiceUnitPrice").value),
+        total: parseFloat(document.getElementById("invoiceQty").value)*parseFloat(document.getElementById("invoiceUnitPrice").value),
+        sellerId: AppData.currentUser.id,
+        sellerName: AppData.currentUser.name,
+        branch: AppData.currentUser.branch,
+        date: new Date().toISOString().slice(0,10)
+    };
+    AppData.salesInvoices.push(inv);
+    renderSalesTable();
+    showNotification("تم حفظ الفاتورة بنجاح","success");
+    this.reset();
+    document.getElementById("invoiceTotal").innerText = "0.00";
+};
+
+// عند تبديل القسم
+function updateSectionContent(sectionName) {
+    // باقي الاقسام ...
+    if(sectionName==="sales") renderSalesTable();
+    if(sectionName==="branch-daily") renderBranchDaily();
+    // باقي الاقسام ...
+}
+
+function renderBranchDaily() {
+    // التصفية حسب المستخدم
+    let invoices = AppData.salesInvoices;
+    let expenses = AppData.expenses;
+    let advances = AppData.advances;
+    let branch = null;
+    if (AppData.currentUser.role === "branchManager") branch = AppData.currentUser.branch;
+    if (branch) {
+        invoices = invoices.filter(inv=>inv.branch===branch);
+        expenses = expenses.filter(e=>e.branch===branch);
+        advances = advances.filter(a=>a.branch===branch);
+    }
+    // التجميع
+    const totalSales = invoices.reduce((sum,inv)=>sum+inv.total,0);
+    const totalExpenses = expenses.reduce((sum,exp)=>sum+exp.amount,0);
+    const totalAdvances = advances.reduce((sum,adv)=>sum+adv.amount,0);
+    const tbody = document.getElementById("branchDailyTableBody");
+    if(!tbody) return;
+    tbody.innerHTML = `
+    <tr><td>إجمالي المبيعات</td><td>${totalSales.toFixed(2)} ج.م</td></tr>
+    <tr><td>إجمالي المصروفات</td><td>${totalExpenses.toFixed(2)} ج.م</td></tr>
+    <tr><td>إجمالي السلف</td><td>${totalAdvances.toFixed(2)} ج.م</td></tr>
+    <tr><td>الصافي</td><td>${(totalSales-totalExpenses-totalAdvances).toFixed(2)} ج.م</td></tr>
+    `;
+    document.getElementById("branchDailySummary").innerText =
+        "فرع: "+(branch||"جميع الفروع")+" - " + new Date().toLocaleDateString("ar-EG");
+}
+
+
