@@ -1050,469 +1050,101 @@ body {
 }
 
 /* الاستجابة للشاشات المختلفة */
-@media (max-width: 1200px) {
-    .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-    
-    .dashboard-charts {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 1024px) {
     .sidebar {
-        position: fixed;
         transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 1001;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .main-content {
         margin-right: 0;
-        padding: var(--spacing-lg);
     }
-    
-    .sidebar.collapsed + .main-content {
-        margin-right: 0;
-    }
-    
+
     .dashboard-charts {
         grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: var(--spacing-md);
-    }
-    
-    /* إضافة خلفية شفافة عند فتح القائمة */
-    .sidebar.show::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: -1;
     }
 }
 
 @media (max-width: 768px) {
-    :root {
-        --sidebar-width: 260px;
-        --header-height: 60px;
-        --spacing-xl: 1.5rem;
-        --spacing-lg: 1rem;
-        --spacing-md: 0.75rem;
-    }
-    
     .header-content {
         padding: 0 var(--spacing-md);
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
     }
-    
-    .logo-section {
-        flex: 1;
-        min-width: 200px;
-    }
-    
+
     .company-info h1 {
         font-size: var(--font-lg);
-        line-height: 1.3;
     }
-    
+
     .company-info p {
         display: none;
     }
-    
-    .header-controls {
-        gap: var(--spacing-sm);
-    }
-    
-    .date-display {
-        display: none;
-    }
-    
-    .user-profile {
-        font-size: var(--font-xs);
-        padding: var(--spacing-xs) var(--spacing-sm);
-    }
-    
+
     .main-content {
         padding: var(--spacing-md);
-        margin-top: var(--header-height);
     }
-    
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        min-width: auto;
+    }
+
     .section-header {
         flex-direction: column;
         gap: var(--spacing-md);
         align-items: stretch;
-        text-align: center;
     }
-    
-    .section-header h2 {
-        font-size: var(--font-2xl);
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .stat-card {
-        padding: var(--spacing-md);
-        gap: var(--spacing-md);
-    }
-    
-    .stat-icon {
-        width: 50px;
-        height: 50px;
-        font-size: var(--font-xl);
-    }
-    
-    .filters-section {
-        flex-direction: column;
-        align-items: stretch;
-        gap: var(--spacing-md);
-    }
-    
-    .search-box {
-        min-width: auto;
-    }
-    
-    .filter-select {
-        min-width: auto;
-    }
-    
-    /* تحسين عرض الجداول على الموبايل */
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: var(--radius-lg);
-    }
-    
-    .data-table {
-        font-size: var(--font-sm);
-        min-width: 600px; /* الحد الأدنى لعرض الجدول */
-    }
-    
-    .data-table th,
-    .data-table td {
-        padding: var(--spacing-sm);
-        white-space: nowrap;
-    }
-    
-    .data-table th {
-        font-size: var(--font-xs);
-        position: sticky;
-        top: 0;
-        z-index: 10;
-    }
-    
-    /* تحسين الأزرار في الجداول */
-    .data-table .btn {
-        padding: 6px 8px;
-        font-size: var(--font-xs);
-        margin: 0 2px;
-    }
-    
-    .data-table .btn i {
-        font-size: var(--font-sm);
-    }
-    
-    /* جعل الجداول أكثر مرونة */
-    .responsive-table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    
-    .responsive-table table {
-        min-width: 100%;
-    }
-    
+
     .chart-container {
         padding: var(--spacing-md);
     }
-    
-    .chart-container canvas {
-        max-height: 250px;
-    }
-    
+
     .modal-content {
         width: 95%;
-        margin: var(--spacing-sm);
-        max-height: 90vh;
+        margin: var(--spacing-md);
     }
-    
-    .modal-header {
-        padding: var(--spacing-md);
-    }
-    
-    .modal-form {
-        padding: var(--spacing-md);
-    }
-    
+
     .form-actions {
         flex-direction: column;
-        gap: var(--spacing-sm);
     }
-    
-    .form-actions .btn {
-        width: 100%;
+
+    .data-table {
+        font-size: var(--font-sm);
     }
-    
-    .recent-activities {
-        padding: var(--spacing-md);
-    }
-    
-    .activity-item {
+
+    .data-table th,
+    .data-table td {
         padding: var(--spacing-sm);
-        gap: var(--spacing-sm);
-    }
-    
-    .activity-icon {
-        width: 35px;
-        height: 35px;
-        font-size: var(--font-xs);
-    }
-    
-    .activity-content p {
-        font-size: var(--font-xs);
-        line-height: 1.4;
-    }
-    
-    .activity-content span {
-        font-size: 10px;
     }
 }
 
 @media (max-width: 480px) {
-    :root {
-        --header-height: 50px;
-        --sidebar-width: 240px;
-    }
-    
-    .header-content {
-        padding: 0 var(--spacing-sm);
-    }
-    
-    .logo-section {
-        min-width: auto;
-    }
-    
-    .company-info h1 {
-        font-size: var(--font-base);
-    }
-    
-    .icon-car {
-        font-size: var(--font-xl);
-    }
-    
+    .date-display,
     .user-profile {
         display: none;
     }
-    
+
     .header-controls {
-        gap: var(--spacing-xs);
-    }
-    
-    .theme-toggle,
-    .sidebar-toggle {
-        width: 35px;
-        height: 35px;
-        font-size: var(--font-sm);
-    }
-    
-    .main-content {
-        padding: var(--spacing-sm);
-    }
-    
-    .section-header h2 {
-        font-size: var(--font-xl);
-    }
-    
-    .stat-card {
-        padding: var(--spacing-sm);
         gap: var(--spacing-sm);
-        flex-direction: column;
-        text-align: center;
     }
-    
-    .stat-icon {
-        align-self: center;
-        width: 45px;
-        height: 45px;
-        font-size: var(--font-lg);
-    }
-    
+
     .notifications-container {
-        left: var(--spacing-xs);
-        right: var(--spacing-xs);
+        left: 10px;
+        right: 10px;
         max-width: none;
-        top: calc(var(--header-height) + 10px);
     }
-    
+
     .notification {
         min-width: auto;
-        padding: var(--spacing-sm);
-        font-size: var(--font-xs);
-    }
-    
-    /* تحسينات إضافية للجداول على الشاشات الصغيرة جداً */
-    .data-table {
-        font-size: 11px;
-        min-width: 500px;
-    }
-    
-    .data-table th,
-    .data-table td {
-        padding: 6px;
-    }
-    
-    .data-table .btn {
-        padding: 4px 6px;
-        font-size: 10px;
-        margin: 0 1px;
-    }
-    
-    .data-table .btn i {
-        font-size: 11px;
-    }
-    
-    /* بطاقات بديلة للجداول على الشاشات الصغيرة */
-    .mobile-card-view {
-        display: none;
-    }
-    
-    @media (max-width: 400px) {
-        .data-table {
-            min-width: 450px;
-        }
-        
-        /* يمكن إضافة عرض بطاقات للبيانات هنا إذا لزم الأمر */
-        .mobile-card-view {
-            display: block;
-        }
-        
-        .table-container table {
-            display: none;
-        }
-    }
-}
-
-/* تحسينات خاصة للمس واللمس */
-@media (hover: none) and (pointer: coarse) {
-    .btn,
-    .nav-button,
-    .stat-card {
-        min-height: 44px; /* الحد الأدنى للمس */
-    }
-    
-    .data-table .btn {
-        min-width: 36px;
-        min-height: 36px;
-    }
-    
-    .theme-toggle,
-    .sidebar-toggle {
-        min-width: 44px;
-        min-height: 44px;
-    }
-}
-
-/* تحسينات للطباعة على الموبايل */
-@media print {
-    .main-header,
-    .sidebar,
-    .notifications-container,
-    .modal,
-    .btn,
-    .filters-section,
-    .form-actions {
-        display: none !important;
-    }
-    
-    .main-content {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-    }
-    
-    .table-container {
-        overflow: visible !important;
-        box-shadow: none;
-        border: 1px solid #000;
-    }
-    
-    .data-table {
-        min-width: auto !important;
-        font-size: 10px !important;
-    }
-    
-    .data-table th {
-        background: #f0f0f0 !important;
-        color: #000 !important;
-    }
-    
-    .data-table th,
-    .data-table td {
-        border: 1px solid #000 !important;
-        padding: 4px !important;
-    }
-    
-    body {
-        background: white !important;
-        color: black !important;
-    }
-    
-    .stat-card,
-    .chart-container {
-        break-inside: avoid;
-    }
-}
-
-/* إضافات للتمرير السلس */
-.table-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.table-container::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-.table-container::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: var(--radius-full);
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-    background: var(--text-secondary);
-}
-
-/* تحسينات للتركيز والوصولية */
-.btn:focus,
-.nav-button:focus,
-input:focus,
-select:focus,
-textarea:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
     }
 }
 
@@ -1617,62 +1249,3 @@ textarea:focus {
 }
 
 /* نهاية ملف التنسيقات */
-/* تحسينات خاصة لعرض الجداول بمرونة */
-.table-responsive {
-    position: relative;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-}
-
-.table-responsive::after {
-    content: '← اسحب لرؤية المزيد';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--primary-color);
-    color: white;
-    padding: 4px 8px;
-    border-radius: var(--radius-sm);
-    font-size: var(--font-xs);
-    opacity: 0.8;
-    pointer-events: none;
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .table-responsive::after {
-        display: block;
-    }
-    
-    .table-responsive:hover::after {
-        opacity: 1;
-    }
-}
-
-/* تحسينات إضافية للشاشات الصغيرة */
-.compact-mode {
-    font-size: var(--font-sm);
-}
-
-.compact-mode .stat-card {
-    padding: var(--spacing-sm);
-}
-
-.compact-mode .data-table th,
-.compact-mode .data-table td {
-    padding: var(--spacing-xs);
-}
-
-/* تحسين عرض الأرقام والعملة */
-.currency-display {
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum";
-}
-
-@media (max-width: 480px) {
-    .currency-display {
-        font-size: var(--font-sm);
-    }
-}
